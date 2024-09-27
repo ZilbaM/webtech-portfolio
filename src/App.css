@@ -5,11 +5,9 @@
   }
 
 :root {
-    --primary : rgba(237, 234, 230, 1);
     --secondary: rgba(25, 79, 196, 1);
     --accent : rgba(255, 188, 54, 1);
     --background-light: rgba(237, 234, 230, 1);
     --text-dark : rgba(0, 0, 0, 1);
     --text-light:  rgba(237, 234, 230, 1);
-    --secondary-dec : 25, 79, 196;
 }
