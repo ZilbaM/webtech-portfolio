@@ -10,4 +10,13 @@
     --background-light: rgba(237, 234, 230, 1);
     --text-dark : rgba(0, 0, 0, 1);
     --text-light:  rgba(237, 234, 230, 1);
+    --light-accent : rgba(253, 252, 237, 1);
+}
+
+body {
+  background-color: var(--background-light);
+}
+
+.align-end {
+  text-align: right;
 }

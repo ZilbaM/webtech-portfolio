@@ -97,23 +97,21 @@ const Line = styled.div`
     
 function Hero({children}) {
   return (
-    <>
-        <HeroSection>
-            <VerticalLine></VerticalLine>
-            <HorizontalLine></HorizontalLine>
-            <Name1>
-                <NameText>basile</NameText>
-            </Name1>
-            <Emoji src={emoji}></Emoji>
-            <Name2>
-                <NameText>maille</NameText>
-            </Name2>
-            <Portfolio>
-              <PortfolioText>portfolio</PortfolioText>
-            </Portfolio>
-            <Underline></Underline>
-        </HeroSection>
-    </>
+    <HeroSection>
+        <VerticalLine></VerticalLine>
+        <HorizontalLine></HorizontalLine>
+        <Name1>
+            <NameText>basile</NameText>
+        </Name1>
+        <Emoji src={emoji}></Emoji>
+        <Name2>
+            <NameText>maille</NameText>
+        </Name2>
+        <Portfolio>
+          <PortfolioText>portfolio</PortfolioText>
+        </Portfolio>
+        <Underline></Underline>
+    </HeroSection>
   )
 }
 
