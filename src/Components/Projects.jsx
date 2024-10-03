@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import mediamap from '../assets/projects/mediamap.jpeg'
 import mit from '../assets/projects/music_interactive_theory.webp'
 import papertextureblue from '../assets/papertextureblue.png'
+import mediamap_poster from '../assets/mediamap_poster.pdf'
 
 const ProjectsSection = styled.div`
   background-color: var(--background-light);
@@ -119,7 +120,7 @@ function Projects({children}) {
               <ProjectDescription>
                 <ProjectItemTitle>Mediamap.</ProjectItemTitle>
                 <ProjectItemText>{'A tangible interface to make urban\nplanning more accessible.\n\nUsing physical interactions to\n change digital data.'}</ProjectItemText>
-                <ProjectLink href='#'>See more</ProjectLink>
+                <ProjectLink href={mediamap_poster}>See more</ProjectLink>
               </ProjectDescription>
             </ProjectContainer>
             <ProjectContainer className='container'>
