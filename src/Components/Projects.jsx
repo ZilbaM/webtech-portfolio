@@ -17,10 +17,10 @@ const ProjectsTitle = styled.div`
 `
 
 const ProjectsTitleText = styled.h2`
-  background-color: var(--secondary);
+  background-color: var(--background-light);
   width: min-content;
   position:relative;
-  &:after {
+  /* &:after {
       content: "";
       width:100%;
       height:100%;
@@ -31,14 +31,18 @@ const ProjectsTitleText = styled.h2`
       background-repeat: repeat;
       top:0;
       right:0;
-  }
+  } */
   margin:0 auto;
-  padding: 1rem;
-  color: var(--background-light);
-  font-family: 'Sen';
-  font-size: 5rem;
+  padding: .5rem 2rem 1rem 2rem ;
+  padding-top: .5rem;;
+  color: var(--secondary);
+  font-family: 'EB Garamond';
+  font-size: 4rem;
   font-style: normal;
-  font-weight: 400;
+  font-weight: 500;
+  transform: translateY(-10vh);
+  border-radius: 5px 5px 0 0;
+  text-align: center;
 `
 
 const ProjectsWrapper = styled.div`
@@ -64,23 +68,25 @@ const ProjectDescription = styled.div`
   padding: 5%;
   display:flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 4rem;
 `
 
 const ProjectItemTitle= styled.h3`
-  font-size:4rem;
+  font-size:3.5rem;
   background-color: var(--light-accent);
-  color: var(--secondary);
+  color: var(--text-dark);
   font-weight: 400;
   padding: .5rem 2rem;
   font-family: "EB Garamond";
-  transform: translate(-30%);
+  transform: translate(-20rem);
   white-space: pre-wrap;
+  width: 80%;
+  margin-left:auto;
 `
 
 const ProjectItemText = styled.p`
   width: fit-content;
-  text-align: justify;
+  text-align: left;
   white-space: pre-wrap;
   font-family: Sen;
   font-size: 1.5rem;
@@ -107,12 +113,16 @@ const ProjectLink = styled.a`
     color: var(--text-dark);
   }
 `
+
+const Highlight = styled.span`
+  color: var(--accent);
+`
     
 function Projects({children}) {
   return (
       <ProjectsSection>
         <ProjectsTitle>
-          <ProjectsTitleText>{"<projects>"}</ProjectsTitleText>
+          <ProjectsTitleText>Projects<Highlight>.</Highlight></ProjectsTitleText>
         </ProjectsTitle>
           <ProjectsWrapper>
             <ProjectContainer className='container'>
@@ -126,7 +136,10 @@ function Projects({children}) {
             <ProjectContainer className='container'>
               <ProjectImage src={mit}></ProjectImage>
               <ProjectDescription>
-                <ProjectItemTitle className='align-end'>{"Music Interactive\nTheory."}</ProjectItemTitle>
+                <div>
+                  <ProjectItemTitle className='align-end'>{"Music Interactive"}</ProjectItemTitle>
+                  <ProjectItemTitle className='align-end fit'>{"Theory."}</ProjectItemTitle>
+                </div>
                 <ProjectItemText>{'An immersive learning experience to foster creativity.\n\nMusic theory directly on the instrument, experiment as you learn.'}</ProjectItemText>
                 <ProjectLink href='#'>See more</ProjectLink>
               </ProjectDescription>

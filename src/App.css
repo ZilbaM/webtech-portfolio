@@ -20,3 +20,8 @@ body {
 .align-end {
   text-align: right;
 }
+
+.fit {
+  width: fit-content;
+  margin-left:auto;
+}

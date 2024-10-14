@@ -4,21 +4,24 @@ import papertexturepolaroid from '../assets/papertexturepolaroid.jpg'
 import portrait from '../assets/portrait.jpg'
 import tapeTop from '../assets/tape_top.png'
 import tapeBot from '../assets/tape_bot.png'
+import bspline from 'b-spline'
+import { useEffect, useState } from 'react';
 
 const AboutSection = styled.div`
   background-color: var(--secondary);
   width: 100vw;
-  height: 100vh;
-  clip-path: polygon(0 0, 100% 2rem, 100% 100%, 0 100%);
+  height: 116vh;
+  clip-path: polygon(0 0, 100% 5rem, 100% 100%, 0 100%);
   z-index:-2;
   padding: 0 4rem;
   &:after {
     content: "";
     z-index:-1;
     width:100%;
-    height:100%;
+    height:116%;
     position:absolute;
     background-image: url(${papertextureblue});
+    background-repeat: repeat-y;
     mix-blend-mode: overlay;
     background-size: cover;
     right:0;
@@ -31,7 +34,7 @@ const AboutSection = styled.div`
 `
 
 const Polaroid = styled.div`
-  height: 60%;
+  height: 60vh;
   aspect-ratio: .83;
   background-image: url(${papertexturepolaroid});
   transform: rotate(-6deg);
@@ -81,6 +84,7 @@ const Marker = styled.p`
   letter-spacing: 0.045rem;
   text-transform: uppercase;
   transform: rotate(3deg);
+  text-align: center;
 `
 
 const Presentation = styled.section`
@@ -104,7 +108,7 @@ const AboutTitleText = styled.h2`
 
 const AboutParagraphText = styled.p`
   color: var(--background-light);
-  text-align: justify;
+  text-align: left;
   font-family: Sen;
   font-size: 1.25rem;
   font-style: normal;
@@ -117,6 +121,31 @@ const Highlight = styled.span`
   color: var(--accent);
 `
 
+const CurveContainer = styled.svg`
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120%; // Adjust width as needed
+  height: 116%; // Matches the height of AboutSection
+  z-index: -1;
+  opacity: 0.4;
+`;
+
+const CurvePath = styled.path`
+  margin: 0 auto;
+`
+
+const AboutWrapper = styled.div`
+  width:100%;
+  height:100%;
+  position:relative;
+  display:flex;
+  justify-content: center;
+  gap: 7rem;
+  align-items: center;
+`
+
 function parseTextWithHighlight(text) {
   return text.split(/(<highlight>.*?<\/highlight>)/g).map((part, index) =>
     part.startsWith('<highlight>') ? (
@@ -127,12 +156,53 @@ function parseTextWithHighlight(text) {
   );
 }
 
+
+function generateCurvePath(points, degree) {
+  let pathData = '';
+  for (let t = 0; t <= 1; t += 0.01) {
+    const point = bspline(t, degree, points);
+    pathData += `${t === 0 ? 'M' : 'L'} ${point[0]},${point[1]} `;
+  }
+  return pathData;
+}
     
 function About({children}) {
   const about_text = "Hi ! I'm a 22-year-old <highlight>creative technology student</highlight> based in <highlight>Paris, France</highlight>. Currently in my <highlight>final year of study</highlight>, I have a strong background in <highlight>web development</highlight> and a passion for <highlight>technological innovation</highlight> and <highlight>creative research</highlight>.\n\nI enjoy exploring the <highlight>intersection</highlight> of <highlight>technology</highlight>, <highlight>design</highlight>, and <highlight>business</highlight>, developing a <highlight>diverse set of skills</highlight> from designing to developping <highlight>innovative solutions</highlight> to <highlight>everyday problems</highlight>.\n\Immersing myself in <highlight>artificial intelligence</highlight>, I also find inspiration in the vibrant <highlight>culture</highlight> and <highlight>creativity</highlight> that surround me.\n\nFeel free to explore my <highlight>projects</highlight> and <highlight>reach out</highlight> if you'd like to connect!"
+  
+  const [curvePath, setCurvePath] = useState('');
+
+  useEffect(() => {
+    // Define control points for the B-spline
+    const points = [
+      [-1400, 100], // starting at some x offset
+      [500, 100], 
+      [500, 600],
+      [1000, 350],
+      [1100, 900],
+      [700, 800],
+      [500, 1000],
+      [500, 1500],
+    ];
+    const degree = 2;
+
+    // Generate SVG path data from control points
+    const pathData = generateCurvePath(points, degree);
+    console.log(pathData)
+    setCurvePath(pathData);
+  }, []);
+
 
   return (
     <AboutSection>
+      <AboutWrapper>
+      <CurveContainer>
+          <CurvePath
+            d={curvePath}
+            stroke="var(--light-accent)"
+            strokeWidth="150"
+            fill="none"
+          />
+        </CurveContainer>
         <Polaroid>
           <Portrait />
           <Marker>Studying @IFT Paris</Marker>
@@ -143,6 +213,7 @@ function About({children}) {
           </AboutTitle>
           <AboutParagraphText>{parseTextWithHighlight(about_text)}</AboutParagraphText>
         </Presentation>
+      </AboutWrapper>
     </AboutSection>
   )
 }
