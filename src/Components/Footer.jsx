@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import papertextureblue from '../assets/papertextureblue.png'
+import papertextureblue from '../assets/papertextureblue.webp'
 import resume from '../assets/Resume_Basile_MAILLE.pdf'
 
 const FooterSection = styled.div`

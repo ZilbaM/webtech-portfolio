@@ -1,7 +1,7 @@
 import styled from 'styled-components'
-import mediamap from '../assets/projects/mediamap.jpeg'
+import mediamap from '../assets/projects/mediamap.webp'
 import mit from '../assets/projects/music_interactive_theory.webp'
-import papertextureblue from '../assets/papertextureblue.png'
+import papertextureblue from '../assets/papertextureblue.webp'
 import mediamap_poster from '../assets/mediamap_poster.pdf'
 
 const ProjectsSection = styled.div`
