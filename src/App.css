@@ -24,4 +24,9 @@ body {
 .fit {
   width: fit-content !important;
   margin-left:auto !important;
-} 
+}
+@media (max-width: 480px) {
+  .fit {
+    margin: 0 auto !important;
+  }
+}

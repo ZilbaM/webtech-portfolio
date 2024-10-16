@@ -2,8 +2,26 @@ import styled from 'styled-components'
 import papertextureblue from '../assets/papertextureblue.webp'
 import resume from '../assets/Resume_Basile_MAILLE.pdf'
 
-const FooterSection = styled.div`
+const sizes = {
+    mobile: '480px',
+    tablet: '768px',
+    desktop: '1024px',
+    medium: '1200px',
+  };
+  
+// Helper function for media queries
+const media = {
+mobile: `(max-width: ${sizes.mobile})`,
+tablet: `(max-width: ${sizes.tablet})`,
+desktop: `(max-width: ${sizes.desktop})`,
+medium: `(max-width: ${sizes.medium})`,
+};
+
+const FooterSection = styled.footer`
     padding: 2rem;
+    @media ${media.tablet} {
+        padding: 1rem;
+    }
 `
 
 const FooterWrapper = styled.div`
@@ -14,20 +32,36 @@ const FooterWrapper = styled.div`
     position:relative;
     padding: 2rem 5rem;
     &:after {
-    content: "";
-    width:100%;
-    height:100%;
-    position:absolute;
-    background-image: url(${papertextureblue});
-    mix-blend-mode: overlay;
-    background-size: cover;
-    right:0;
-    top: 0;
-    clip: auto;
-  }
-  display:flex;
-  align-items: center;
-  gap: 3rem;
+        content: "";
+        width:100%;
+        height:100%;
+        position:absolute;
+        background-image: url(${papertextureblue});
+        mix-blend-mode: overlay;
+        background-size: cover;
+        right:0;
+        top: 0;
+        clip: auto;
+    }
+    display:flex;
+    align-items: center;
+    gap: 3rem;
+    @media ${media.medium} {
+        padding: 2rem 3rem;
+    }
+    @media ${media.desktop} {
+        padding: 2rem;
+        gap: 2rem;
+    }
+    @media ${media.tablet} {
+        padding: 2rem 1.5rem;
+    }
+    @media ${media.mobile} {
+        padding: 2rem 1rem;
+        gap: 1rem;
+        flex-direction: column;
+        align-items: center;
+    }
 `
 
 const FooterSocials = styled.div`
@@ -42,16 +76,25 @@ const SocialsLogo = styled.a`
     display:flex;
     justify-content: center;
     align-items: center;
+    @media ${media.tablet} {
+        width: 1.7rem;
+        height: 1.7rem;
+    }
+    @media ${media.mobile} {
+        width: 2rem;
+        height: 2rem;
+    }
+
 `
 const LogoSvg = styled.svg`
-    width: 2rem;
-    height: 2rem;
+    width: 100%;
+    height: 100%;
     fill: var(--background-light);
     transition: all .3s ease-in-out;
     &:hover {
         fill: var(--accent);
     }
-    `
+`
 
 const FooterEmail = styled.a`
     z-index: 2;
@@ -65,8 +108,19 @@ const FooterEmail = styled.a`
     padding: 5px 1rem;
     cursor: pointer;
     &:hover {
-        /* color: var(--accent); */
         background-color: var(--accent);
+    }
+    @media ${media.medium} {
+        font-size: 1.75rem;
+    }
+    @media ${media.desktop} {
+        font-size: 1.5rem;
+    }
+    @media ${media.tablet} {
+        font-size: 1.3rem;
+    }
+    @media ${media.mobile} {
+        font-size: 1.5rem;
     }
     `
 
@@ -76,9 +130,20 @@ const FooterRights = styled.p`
     color: white;
     text-transform: uppercase;
     margin-left: auto;
+    text-align: center;
+    @media ${media.desktop} {
+        font-size: .8rem;
+    }
+    @media ${media.tablet} {
+        font-size: .7rem;
+    }
+    @media ${media.mobile} {
+        margin-left: 0;
+        font-size: .8rem;
+    }
 `
     
-function Footer({children}) {
+function Footer() {
 
   return (
     <FooterSection>
