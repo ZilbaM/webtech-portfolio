@@ -9,6 +9,7 @@ import Footer from './Components/Footer'
 const Body = styled.div`
   background-color: var(--background-light);
   width: 100vw;
+  overflow: hidden;
 `
 
 function App() {

@@ -7,6 +7,21 @@ import tapeBot from '../assets/tape_bot.png'
 import bspline from 'b-spline'
 import { useEffect, useState } from 'react';
 
+const sizes = {
+  mobile: '480px',
+  tablet: '768px',
+  desktop: '1024px',
+  medium: '1200px',
+};
+
+// Helper function for media queries
+const media = {
+  mobile: `(max-width: ${sizes.mobile})`,
+  tablet: `(max-width: ${sizes.tablet})`,
+  desktop: `(max-width: ${sizes.desktop})`,
+  medium: `(max-width: ${sizes.medium})`,
+};
+
 const AboutSection = styled.div`
   background-color: var(--secondary);
   width: 100vw;
@@ -31,10 +46,40 @@ const AboutSection = styled.div`
   justify-content: center;
   gap: 7rem;
   align-items: center;
-`
+  @media ${media.tablet} {
+    height: 150vh;
+    padding: 15vh 4rem;
+    &:after {
+      height: 165%;
+    }
+  }
+  @media ${media.mobile} {
+    padding: 5vh 2rem;
+  }
+  `
+  
+  const AboutWrapper = styled.div`
+    width:100%;
+    height:100%;
+    position:relative;
+    display:flex;
+    justify-content: center;
+    gap: 7rem;
+    align-items: center;
+    @media ${media.medium} {
+      gap: 5rem;
+    }
+    @media ${media.desktop} {
+      gap: 3rem;
+    }
+    @media ${media.tablet} {
+      flex-direction: column-reverse;
+    }
+  `
 
 const Polaroid = styled.div`
-  height: 60vh;
+  max-height: 60vh;
+  /* width: 40%; */
   aspect-ratio: .83;
   background-image: url(${papertexturepolaroid});
   transform: rotate(-6deg);
@@ -64,6 +109,9 @@ const Polaroid = styled.div`
     bottom:-2rem;
     transform: rotate(35deg);
   }
+  @media ${media.tablet} {
+    width: 60%;
+  }
 `
 
 const Portrait = styled.div`
@@ -74,6 +122,9 @@ const Portrait = styled.div`
   height: 74%;
   margin-top: 5%;
   box-shadow: 0 0 200px rgba(0,0,0,1) inset;
+  @media ${media.medium} {
+    box-shadow: 0 0 50px rgba(0,0,0,1) inset;
+  }
 `
 
 const Marker = styled.p`
@@ -85,6 +136,18 @@ const Marker = styled.p`
   text-transform: uppercase;
   transform: rotate(3deg);
   text-align: center;
+  @media ${media.medium} {
+    font-size: 2rem;
+  }
+  @media ${media.desktop} {
+    font-size: 1.75rem;
+  }
+  @media ${media.desktop} {
+    font-size: 1.3rem;
+  }
+  @media ${media.mobile} {
+    font-size: 1rem;
+  }
 `
 
 const Presentation = styled.section`
@@ -92,6 +155,9 @@ const Presentation = styled.section`
   flex-direction: column;
   width: 40%;
   gap:2rem;
+  @media ${media.desktop} {
+    width: 100%;
+  }
 `
 
 const AboutTitle = styled.div`
@@ -104,6 +170,12 @@ const AboutTitleText = styled.h2`
   font-size: 4rem;
   font-weight: 500;
   line-height: normal;
+  @media ${media.desktop}{
+    font-size: 3rem;
+  }
+  @media ${media.mobile}{
+    font-size: 2.5rem;
+  }
 `
 
 const AboutParagraphText = styled.p`
@@ -115,6 +187,12 @@ const AboutParagraphText = styled.p`
   font-weight: 400;
   line-height: normal;
   white-space: pre-wrap;
+  @media ${media.desktop}{
+    font-size: 1.15rem;
+  }
+  @media ${media.mobile}{
+    font-size: 1rem;
+  }
 `
 
 const Highlight = styled.span`
@@ -129,21 +207,12 @@ const CurveContainer = styled.svg`
   width: 120%; // Adjust width as needed
   height: 116%; // Matches the height of AboutSection
   z-index: -1;
-  opacity: 0.4;
+  opacity: 0.3;
 `;
 
 const CurvePath = styled.path`
   margin: 0 auto;
-`
-
-const AboutWrapper = styled.div`
-  width:100%;
-  height:100%;
-  position:relative;
-  display:flex;
-  justify-content: center;
-  gap: 7rem;
-  align-items: center;
+  stroke-width: 7.5rem;
 `
 
 function parseTextWithHighlight(text) {
@@ -199,7 +268,7 @@ function About({children}) {
           <CurvePath
             d={curvePath}
             stroke="var(--light-accent)"
-            strokeWidth="150"
+            // strokeWidth="150"
             fill="none"
           />
         </CurveContainer>
