@@ -5,7 +5,12 @@ import portrait from '../assets/portrait.webp'
 import tapeTop from '../assets/tape_top.png'
 import tapeBot from '../assets/tape_bot.png'
 import bspline from 'b-spline'
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
+
+import { Plane, Box, Text } from '@react-three/drei';
+import { TextureLoader } from 'three'
+import { Canvas, useFrame, useLoader } from '@react-three/fiber';
+
 
 const sizes = {
   mobile: '480px',
@@ -234,6 +239,61 @@ function generateCurvePath(points, degree) {
   }
   return pathData;
 }
+
+const PolaroidMesh = () => {
+  const groupRef = useRef();
+  const portraitTexture = useLoader(TextureLoader, 'static/portraitSquare.webp');
+  const [hovered, setHovered] = useState(false);
+  const mousePos = useRef({ x: 0, y: 0 });
+  const xFactor = .7
+  const yFactor = 1
+
+  useFrame( () => {
+    if (groupRef.current) {
+      if (hovered) {
+        const targetRotationX = (mousePos.current.y / window.innerHeight) * xFactor - 0.05;
+        const targetRotationY = (mousePos.current.x / window.innerWidth) * yFactor;
+        groupRef.current.rotation.x += (targetRotationX - groupRef.current.rotation.x) * xFactor;
+        groupRef.current.rotation.y += (targetRotationY - groupRef.current.rotation.y) * yFactor;
+        
+      } else {
+        groupRef.current.rotation.x += (0 - groupRef.current.rotation.x) * xFactor;
+        groupRef.current.rotation.y += (0 - groupRef.current.rotation.y) * yFactor;
+      }
+    }
+  })
+
+  return (
+    <group 
+      ref={groupRef}
+      onPointerOver={() => setHovered(true)}
+      onPointerOut={() => setHovered(false)}
+      onPointerMove={(event) => {
+        mousePos.current.x = event.clientX;
+        mousePos.current.y = event.clientY;
+      }}  
+    >
+      <Box args={[8.4, 10.0, 0]} position={[0, 0, 0]}>
+          <meshStandardMaterial color="#FFFFFF" />
+      </Box>
+
+      <Plane args={[7.4, 7.4]} position={[0, .8, 0.01]}>
+        <meshStandardMaterial map={portraitTexture} />
+      </Plane>
+
+      <Text
+        color="black"
+        fontSize={.7}
+        font='static/PermanentMarker.ttf'
+        anchorX="center"
+        anchorY="middle"
+        position={[0, -3.8, 0.01]}
+      >
+        Studying @ IFT - Paris
+      </Text>
+    </group>
+  )
+}
     
 function About({children}) {
   const about_text = "Hi ! I'm a 22-year-old <highlight>creative technology student</highlight> based in <highlight>Paris, France</highlight>. Currently in my <highlight>final year of study</highlight>, I have a strong background in <highlight>web development</highlight> and a passion for <highlight>technological innovation</highlight> and <highlight>creative research</highlight>.\n\nI enjoy exploring the <highlight>intersection</highlight> of <highlight>technology</highlight>, <highlight>design</highlight>, and <highlight>business</highlight>, developing a <highlight>diverse set of skills</highlight> from designing to developping <highlight>innovative solutions</highlight> to <highlight>everyday problems</highlight>.\n\Immersing myself in <highlight>artificial intelligence</highlight>, I also find inspiration in the vibrant <highlight>culture</highlight> and <highlight>creativity</highlight> that surround me.\n\nFeel free to explore my <highlight>projects</highlight> and <highlight>reach out</highlight> if you'd like to connect!"
@@ -272,10 +332,10 @@ function About({children}) {
             fill="none"
           />
         </CurveContainer>
-        <Polaroid>
-          <Portrait />
-          <Marker>Studying @IFT Paris</Marker>
-        </Polaroid>
+        <Canvas style={{ width: "50%" }} camera={{ position: [0, 0, 10] }}>
+          <ambientLight intensity={4} />
+          <PolaroidMesh  />
+        </Canvas>
         <Presentation>
           <AboutTitle>
             <AboutTitleText>About me<Highlight>.</Highlight></AboutTitleText>

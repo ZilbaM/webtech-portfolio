@@ -1,13 +1,18 @@
-import styled from 'styled-components'
-import mediamap from '../assets/projects/mediamap.webp'
-import mit from '../assets/projects/music_interactive_theory.webp'
-import mediamap_poster from '../assets/mediamap_poster.pdf'
+import styled from "styled-components";
+import mediamap from "../assets/projects/mediamap.webp";
+import mit from "../assets/projects/music_interactive_theory.webp";
+import mediamap_poster from "../assets/mediamap_poster.pdf";
+
+import React, { Suspense, useRef } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { OrbitControls, useGLTF } from "@react-three/drei";
+import * as THREE from "three";
 
 const sizes = {
-  mobile: '480px',
-  tablet: '768px',
-  desktop: '1024px',
-  medium: '1200px',
+  mobile: "480px",
+  tablet: "768px",
+  desktop: "1024px",
+  medium: "1200px",
 };
 
 // Helper function for media queries
@@ -21,23 +26,22 @@ const media = {
 const ProjectsSection = styled.div`
   background-color: var(--background-light);
   width: 100%;
-  display:flex;
+  display: flex;
   flex-direction: column;
   justify-content: center;
-`
+`;
 
-const ProjectsTitle = styled.div`
-`
+const ProjectsTitle = styled.div``;
 
 const ProjectsTitleText = styled.h2`
   background-color: var(--background-light);
   width: min-content;
-  position:relative;
-  margin:0 auto;
-  padding: .5rem 2rem 1rem 2rem ;
-  padding-top: .5rem;;
+  position: relative;
+  margin: 0 auto;
+  padding: 0.5rem 2rem 1rem 2rem;
+  padding-top: 0.5rem;
   color: var(--secondary);
-  font-family: 'EB Garamond';
+  font-family: "EB Garamond";
   font-size: 4rem;
   font-style: normal;
   font-weight: 500;
@@ -53,13 +57,12 @@ const ProjectsTitleText = styled.h2`
   @media ${media.tablet} {
     font-size: 2.3rem;
   }
-  
-`
+`;
 
 const ProjectsWrapper = styled.div`
   margin: 0 auto;
-  width:70%;
-  display:flex;
+  width: 70%;
+  display: flex;
   flex-direction: column;
   gap: 5rem;
   align-items: center;
@@ -70,36 +73,36 @@ const ProjectsWrapper = styled.div`
     width: 90%;
     gap: 2rem;
   }
-`
+`;
 
 const ProjectContainer = styled.div`
-  width:100%;
-  display:flex; 
+  width: 100%;
+  display: flex;
   justify-content: center;
   @media ${media.mobile} {
     flex-direction: column;
     align-items: center;
   }
-`
+`;
 
 const ProjectImage = styled.img`
-  aspect-ratio: .8 ;
+  aspect-ratio: 0.8;
   width: 50%;
   object-fit: cover;
   @media ${media.desktop} {
-    width:40%;
+    width: 40%;
   }
   @media ${media.mobile} {
-    width:80%;
+    width: 80%;
     aspect-ratio: 1;
   }
-`
+`;
 
 const ProjectDescription = styled.div`
   width: 60%;
   padding: 5%;
   padding-right: 0;
-  display:flex;
+  display: flex;
   flex-direction: column;
   gap: 4rem;
   @media ${media.desktop} {
@@ -113,19 +116,19 @@ const ProjectDescription = styled.div`
     width: 100%;
     padding: 5% 0;
   }
-`
+`;
 
-const ProjectItemTitle= styled.h3`
-  font-size:3.5rem;
+const ProjectItemTitle = styled.h3`
+  font-size: 3.5rem;
   background-color: var(--light-accent);
   color: var(--text-dark);
   font-weight: 400;
-  padding: .5rem 2rem;
+  padding: 0.5rem 2rem;
   font-family: "EB Garamond";
   transform: translateX(-20rem);
   white-space: pre-wrap;
   width: max-content;
-  margin-left:auto;
+  margin-left: auto;
   @media ${media.medium} {
     font-size: 3rem;
   }
@@ -140,7 +143,7 @@ const ProjectItemTitle= styled.h3`
     margin-left: 0;
     transform: translateX(0);
   }
-`
+`;
 
 const ProjectItemText = styled.p`
   width: 100%;
@@ -163,10 +166,10 @@ const ProjectItemText = styled.p`
   @media ${media.phone} {
     width: 70%;
   }
-`
+`;
 
 const ProjectLink = styled.a`
-  width:fit-content;
+  width: fit-content;
   background-color: var(--secondary);
   color: var(--background-light);
   text-align: justify;
@@ -177,7 +180,7 @@ const ProjectLink = styled.a`
   line-height: normal;
   text-decoration: none;
   padding: 1rem 2rem;
-  transition: all .3s ease-in-out;
+  transition: all 0.3s ease-in-out;
   &:hover {
     background-color: var(--light-accent);
     color: var(--text-dark);
@@ -191,41 +194,127 @@ const ProjectLink = styled.a`
   @media ${media.tablet} {
     font-size: 1.15rem;
   }
-`
+`;
 
 const Highlight = styled.span`
   color: var(--accent);
-`
-    
-function Projects({children}) {
+`;
+
+function Projects({ children }) {
   return (
-      <ProjectsSection>
-        <ProjectsTitle>
-          <ProjectsTitleText>Projects<Highlight>.</Highlight></ProjectsTitleText>
-        </ProjectsTitle>
-          <ProjectsWrapper>
-            <ProjectContainer className='container'>
-              <ProjectImage src={mediamap}></ProjectImage>
-              <ProjectDescription>
-                <ProjectItemTitle>Mediamap.</ProjectItemTitle>
-                <ProjectItemText>{'A tangible interface to make urban planning more accessible.\n\nUsing physical interactions to change digital data.'}</ProjectItemText>
-                <ProjectLink href={mediamap_poster}>See more</ProjectLink>
-              </ProjectDescription>
-            </ProjectContainer>
-            <ProjectContainer className='container'>
-              <ProjectImage src={mit}></ProjectImage>
-              <ProjectDescription>
-                <div>
-                  <ProjectItemTitle className='align-end'>{"Music Interactive"}</ProjectItemTitle>
-                  <ProjectItemTitle className='align-end fit'>{"Theory."}</ProjectItemTitle>
-                </div>
-                <ProjectItemText>{'An immersive learning experience to foster creativity.\n\nMusic theory directly on the instrument, experiment as you learn.'}</ProjectItemText>
-                <ProjectLink href='#'>See more</ProjectLink>
-              </ProjectDescription>
-            </ProjectContainer>
-          </ProjectsWrapper>
-      </ProjectsSection>
-  )
+    <ProjectsSection>
+      <ProjectsTitle>
+        <ProjectsTitleText>
+          Projects<Highlight>.</Highlight>
+        </ProjectsTitleText>
+      </ProjectsTitle>
+      <ProjectsWrapper>
+        <ProjectContainer className="container">
+         
+        <Canvas style={{ width: "50%", height: "auto" }}>
+            <ambientLight intensity={0.5} />
+            <directionalLight position={[0, 10, 5]} />
+            <Suspense fallback={null}>
+              <CityModel />
+            </Suspense>
+            <OrbitControls enableZoom={false} />
+          </Canvas>
+
+          <ProjectDescription>
+            <ProjectItemTitle>Mediamap.</ProjectItemTitle>
+            <ProjectItemText>
+              {
+                "A tangible interface to make urban planning more accessible.\n\nUsing physical interactions to change digital data."
+              }
+            </ProjectItemText>
+            <ProjectLink href={mediamap_poster}>See more</ProjectLink>
+          </ProjectDescription>
+        </ProjectContainer>
+        <ProjectContainer className="container">
+
+          <Canvas style={{ width: "50%", height: "auto" }}>
+            <ambientLight intensity={0.5} />
+            <directionalLight position={[0, 5, 5]} />
+            <Suspense fallback={null}>
+              <PianoModel />
+            </Suspense>
+            <OrbitControls enableZoom={false} />
+          </Canvas>
+
+          <ProjectDescription>
+            <div>
+              <ProjectItemTitle className="align-end">
+                {"Music Interactive"}
+              </ProjectItemTitle>
+              <ProjectItemTitle className="align-end fit">
+                {"Theory."}
+              </ProjectItemTitle>
+            </div>
+            <ProjectItemText>
+              {
+                "An immersive learning experience to foster creativity.\n\nMusic theory directly on the instrument, experiment as you learn."
+              }
+            </ProjectItemText>
+            <ProjectLink href="#">See more</ProjectLink>
+          </ProjectDescription>
+        </ProjectContainer>
+      </ProjectsWrapper>
+    </ProjectsSection>
+  );
 }
 
-export default Projects
+function CityModel() {
+  const scene = useGLTF("static/city.gltf");
+  const cityRef = useRef();
+
+  useFrame(() => {
+    if (cityRef.current) {
+      cityRef.current.rotation.y += .005;
+    }
+  });
+
+  return (
+    <primitive
+      ref={cityRef}
+      object={scene.scene}
+      scale={3.5}
+      position={[0, 0, 0]}
+      rotation={[0, 0, 0]}
+      
+    />
+  );
+}
+
+function PianoModel() {
+  const { scene } = useGLTF('static/piano.gltf'); // Make sure to replace with the correct path
+
+  const pianoRef = useRef()
+
+  useFrame(() => {
+    if (pianoRef.current) {
+      pianoRef.current.rotation.y += 0.01;
+    }
+  })  
+
+  scene.traverse((child) => {
+    if (child.isMesh) {
+      // Set the material to be transparent with an outline effect
+      child.material = new THREE.MeshBasicMaterial({
+        color: 0x000000, // Adjust outline color here if needed
+        transparent: true,
+        opacity: 0.0, // Completely transparent material
+      });
+      const edges = new THREE.EdgesGeometry(child.geometry);
+      const line = new THREE.LineSegments(
+        edges,
+        new THREE.LineBasicMaterial({ color: 0x000000 }) // Outline color
+      );
+      // Make sure the material renders only the front faces
+      child.add(line);
+    }
+  });
+
+  return <primitive ref={pianoRef} scale={3} object={scene} rotation={[.5, 0, 0]} />;
+}
+
+export default Projects;
