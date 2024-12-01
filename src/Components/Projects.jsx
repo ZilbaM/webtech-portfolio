@@ -1,6 +1,4 @@
 import styled from "styled-components";
-import mediamap from "../assets/projects/mediamap.webp";
-import mit from "../assets/projects/music_interactive_theory.webp";
 import mediamap_poster from "../assets/mediamap_poster.pdf";
 
 import React, { Suspense, useRef } from "react";
@@ -82,19 +80,6 @@ const ProjectContainer = styled.div`
   @media ${media.mobile} {
     flex-direction: column;
     align-items: center;
-  }
-`;
-
-const ProjectImage = styled.img`
-  aspect-ratio: 0.8;
-  width: 50%;
-  object-fit: cover;
-  @media ${media.desktop} {
-    width: 40%;
-  }
-  @media ${media.mobile} {
-    width: 80%;
-    aspect-ratio: 1;
   }
 `;
 

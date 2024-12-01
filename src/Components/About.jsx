@@ -6,11 +6,13 @@ import tapeTop from '../assets/tape_top.png'
 import tapeBot from '../assets/tape_bot.png'
 import bspline from 'b-spline'
 import { useEffect, useState, useRef } from 'react';
-
 import { Plane, Box, Text } from '@react-three/drei';
 import { TextureLoader } from 'three'
 import { Canvas, useFrame, useLoader } from '@react-three/fiber';
-
+import * as THREE from 'three';
+import { Line2 } from 'three/examples/jsm/lines/Line2'
+import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial'
+import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry'
 
 const sizes = {
   mobile: '480px',
@@ -82,79 +84,6 @@ const AboutSection = styled.div`
     }
   `
 
-const Polaroid = styled.div`
-  max-height: 60vh;
-  /* width: 40%; */
-  aspect-ratio: .83;
-  background-image: url(${papertexturepolaroid});
-  transform: rotate(-6deg);
-  display:flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  &:before{
-    content: "";
-    position: absolute;
-    width: 40%;
-    aspect-ratio: 2;
-    background-image: url(${tapeTop});
-    background-size: cover;
-    right:-20%;
-    top:-3rem;
-    transform: rotate(35deg);
-  }
-  &:after{
-    content: "";
-    position: absolute;
-    width: 40%;
-    aspect-ratio: 2;
-    background-image: url(${tapeBot});
-    background-size: cover;
-    left:-20%;
-    bottom:-2rem;
-    transform: rotate(35deg);
-  }
-  @media ${media.tablet} {
-    width: 60%;
-  }
-`
-
-const Portrait = styled.div`
-  background-image: url(${portrait});
-  background-size: cover;
-  background-position: 50%;
-  width: 88%;
-  height: 74%;
-  margin-top: 5%;
-  box-shadow: 0 0 200px rgba(0,0,0,1) inset;
-  @media ${media.medium} {
-    box-shadow: 0 0 50px rgba(0,0,0,1) inset;
-  }
-`
-
-const Marker = styled.p`
-  margin: auto 0;
-  padding-bottom: 1rem;
-  font-family: 'Permanent Marker';
-  font-size: 2.5rem;
-  letter-spacing: 0.045rem;
-  text-transform: uppercase;
-  transform: rotate(3deg);
-  text-align: center;
-  @media ${media.medium} {
-    font-size: 2rem;
-  }
-  @media ${media.desktop} {
-    font-size: 1.75rem;
-  }
-  @media ${media.desktop} {
-    font-size: 1.3rem;
-  }
-  @media ${media.mobile} {
-    font-size: 1rem;
-  }
-`
-
 const Presentation = styled.section`
   display:flex;
   flex-direction: column;
@@ -204,22 +133,6 @@ const Highlight = styled.span`
   color: var(--accent);
 `
 
-const CurveContainer = styled.svg`
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 120%; // Adjust width as needed
-  height: 116%; // Matches the height of AboutSection
-  z-index: -1;
-  opacity: 0.3;
-`;
-
-const CurvePath = styled.path`
-  margin: 0 auto;
-  stroke-width: 7.5rem;
-`
-
 function parseTextWithHighlight(text) {
   return text.split(/(<highlight>.*?<\/highlight>)/g).map((part, index) =>
     part.startsWith('<highlight>') ? (
@@ -230,15 +143,134 @@ function parseTextWithHighlight(text) {
   );
 }
 
+    
+function About({children}) {
+  const about_text = "Hi ! I'm a 22-year-old <highlight>creative technology student</highlight> based in <highlight>Paris, France</highlight>. Currently in my <highlight>final year of study</highlight>, I have a strong background in <highlight>web development</highlight> and a passion for <highlight>technological innovation</highlight> and <highlight>creative research</highlight>.\n\nI enjoy exploring the <highlight>intersection</highlight> of <highlight>technology</highlight>, <highlight>design</highlight>, and <highlight>business</highlight>, developing a <highlight>diverse set of skills</highlight> from designing to developping <highlight>innovative solutions</highlight> to <highlight>everyday problems</highlight>.\n\Immersing myself in <highlight>artificial intelligence</highlight>, I also find inspiration in the vibrant <highlight>culture</highlight> and <highlight>creativity</highlight> that surround me.\n\nFeel free to explore my <highlight>projects</highlight> and <highlight>reach out</highlight> if you'd like to connect!"
 
-function generateCurvePath(points, degree) {
-  let pathData = '';
-  for (let t = 0; t <= 1; t += 0.01) {
-    const point = bspline(t, degree, points);
-    pathData += `${t === 0 ? 'M' : 'L'} ${point[0]},${point[1]} `;
-  }
-  return pathData;
+
+  return (
+    <AboutSection>
+      <AboutWrapper>
+        
+        <BSplineAnimation />
+        
+        <Canvas style={{ width: "50%" }} camera={{ position: [0, 0, 10] }}>
+          <ambientLight intensity={4} />
+          <PolaroidMesh  />
+        </Canvas>
+        
+        <Presentation>
+          <AboutTitle>
+            <AboutTitleText>About me<Highlight>.</Highlight></AboutTitleText>
+          </AboutTitle>
+          <AboutParagraphText>{parseTextWithHighlight(about_text)}</AboutParagraphText>
+        </Presentation>
+      
+      </AboutWrapper>
+    </AboutSection>
+  )
 }
+
+export default About
+
+
+
+
+function BSplineCurve() {
+  const lineRef = useRef();
+
+  // Define control points for the B-spline curve
+  const points = [
+    new THREE.Vector2(-20, 8),
+    new THREE.Vector2(-10, 6.5),
+    new THREE.Vector2(-10, -3),
+    new THREE.Vector2(4, 1),
+    new THREE.Vector2(8, -9),
+    new THREE.Vector2(-4, -8),
+    new THREE.Vector2(-6, -15),
+  ];
+
+  // Create a SplineCurve instance
+  const splineCurve = new THREE.SplineCurve(points);
+
+  useEffect(() => {
+    // Set up initial geometry and material
+    const newPoints = splineCurve.getPoints(100).flatMap((point) => [point.x, point.y, 0]);
+    const lineGeometry = new LineGeometry();
+    lineGeometry.setPositions(newPoints);
+
+    const lineMaterial = new LineMaterial({
+      color: '#57594b',
+      opacity: 0.3,
+      linewidth: 150, 
+      dashed: false,
+    });
+
+    lineMaterial.resolution.set(window.innerWidth, window.innerHeight); 
+
+    lineRef.current = new Line2(lineGeometry, lineMaterial);
+
+    const handleResize = () => {
+      lineMaterial.resolution.set(window.innerWidth, window.innerHeight);
+    };
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      lineGeometry.dispose();
+      lineMaterial.dispose();
+      if (lineRef.current) {
+        lineRef.current.geometry.dispose();
+        lineRef.current.material.dispose();
+      }
+    };
+  }, []);
+
+  useFrame(() => {
+    // Animate some control points
+    points[1].x = -10 + Math.cos(Date.now() * 0.001) * 1;
+    points[1].y = 6 + Math.sin(Date.now() * 0.001) * 1;
+
+    points[2].x = -10 + Math.cos(Date.now() * 0.001) * 1;
+    points[2].y = -3 + Math.sin(Date.now() * 0.0001) * 1;
+    
+    points[3].x = 4 + Math.cos(Date.now() * 0.002) * 0.5;
+    points[3].y = 1 + Math.sin(Date.now() * 0.001) * 1;
+    
+    points[4].x = 8 + Math.cos(Date.now() * 0.001) * 1;
+    points[4].y = -9 + Math.sin(Date.now() * 0.001) * 0.5;
+    
+    points[5].x = -4 + Math.cos(Date.now() * 0.001) * 1;
+    points[5].y = -8 + Math.sin(Date.now() * 0.0001) * 1;
+
+
+    // Update the geometry with the new control points
+    splineCurve.points = points;
+    const newPoints = splineCurve.getPoints(100).flatMap((point) => [point.x, point.y, 0]);
+    if (lineRef.current) {
+      lineRef.current.geometry.setPositions(newPoints);
+    }
+  });
+
+  return lineRef.current ? <primitive object={lineRef.current} /> : null;
+}
+
+
+function BSplineAnimation() {
+  return (
+    <Canvas
+      style={{ position: 'absolute', width: '200%', height: '100%', zIndex: -1 }}
+      orthographic
+      camera={{ zoom: 50, position: [0, 0, 10] }}
+    >
+      <ambientLight intensity={0.5} />
+      <directionalLight position={[0, 0, 5]} />
+      <BSplineCurve />
+    </Canvas>
+  );
+}
+
+
 
 const PolaroidMesh = () => {
   const groupRef = useRef();
@@ -253,8 +285,9 @@ const PolaroidMesh = () => {
       if (hovered) {
         const targetRotationX = (mousePos.current.y / window.innerHeight) * xFactor - 0.05;
         const targetRotationY = (mousePos.current.x / window.innerWidth) * yFactor;
-        groupRef.current.rotation.x += (targetRotationX - groupRef.current.rotation.x) * xFactor;
-        groupRef.current.rotation.y += (targetRotationY - groupRef.current.rotation.y) * yFactor;
+        groupRef.current.rotation.x += (targetRotationX - groupRef.current.rotation.x) * 0.1;
+        groupRef.current.rotation.y += (targetRotationY - groupRef.current.rotation.y) * 0.1;
+
         
       } else {
         groupRef.current.rotation.x += (0 - groupRef.current.rotation.x) * xFactor;
@@ -294,57 +327,3 @@ const PolaroidMesh = () => {
     </group>
   )
 }
-    
-function About({children}) {
-  const about_text = "Hi ! I'm a 22-year-old <highlight>creative technology student</highlight> based in <highlight>Paris, France</highlight>. Currently in my <highlight>final year of study</highlight>, I have a strong background in <highlight>web development</highlight> and a passion for <highlight>technological innovation</highlight> and <highlight>creative research</highlight>.\n\nI enjoy exploring the <highlight>intersection</highlight> of <highlight>technology</highlight>, <highlight>design</highlight>, and <highlight>business</highlight>, developing a <highlight>diverse set of skills</highlight> from designing to developping <highlight>innovative solutions</highlight> to <highlight>everyday problems</highlight>.\n\Immersing myself in <highlight>artificial intelligence</highlight>, I also find inspiration in the vibrant <highlight>culture</highlight> and <highlight>creativity</highlight> that surround me.\n\nFeel free to explore my <highlight>projects</highlight> and <highlight>reach out</highlight> if you'd like to connect!"
-  
-  const [curvePath, setCurvePath] = useState('');
-
-  useEffect(() => {
-    // Define control points for the B-spline
-    const points = [
-      [-1400, 100], // starting at some x offset
-      [500, 100], 
-      [500, 600],
-      [1000, 350],
-      [1100, 900],
-      [700, 800],
-      [500, 1000],
-      [500, 1500],
-    ];
-    const degree = 2;
-
-    // Generate SVG path data from control points
-    const pathData = generateCurvePath(points, degree);
-    console.log(pathData)
-    setCurvePath(pathData);
-  }, []);
-
-
-  return (
-    <AboutSection>
-      <AboutWrapper>
-      <CurveContainer>
-          <CurvePath
-            d={curvePath}
-            stroke="var(--light-accent)"
-            // strokeWidth="150"
-            fill="none"
-          />
-        </CurveContainer>
-        <Canvas style={{ width: "50%" }} camera={{ position: [0, 0, 10] }}>
-          <ambientLight intensity={4} />
-          <PolaroidMesh  />
-        </Canvas>
-        <Presentation>
-          <AboutTitle>
-            <AboutTitleText>About me<Highlight>.</Highlight></AboutTitleText>
-          </AboutTitle>
-          <AboutParagraphText>{parseTextWithHighlight(about_text)}</AboutParagraphText>
-        </Presentation>
-      </AboutWrapper>
-    </AboutSection>
-  )
-}
-
-export default About
